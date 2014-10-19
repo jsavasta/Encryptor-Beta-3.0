@@ -1,0 +1,75 @@
+package encryption;
+import java.lang.Character;
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.lang.String;
+import java.lang.Integer;
+public class Decrypt
+{
+	static String encData;
+	static ArrayList<String> data = new ArrayList<String>();
+	static ArrayList<Integer> inData = new ArrayList<Integer>();
+	static ArrayList<Double> decInData = new ArrayList<Double>();
+	static ArrayList<Integer> roundDecInData = new ArrayList<Integer>();
+	static ArrayList<Character> decData = new ArrayList<Character>();
+	static ArrayList<Character> last = new ArrayList<Character>();
+	static int num;
+	static int[] datta;
+	static char[] ch = new char[1];
+	static char chr;
+	static public String word = "";
+	static public String letter = "";
+	public static void main (String[] args, String userin2)
+	{
+	}
+	public static void getData(String encData)
+	{
+		for(int a= 0; a < encData.length()/2; a++)
+		{
+			data.add(a, encData.substring(a,a + 1) + encData.substring(encData.length() - (a + 1),encData.length() - a ));
+		}		
+	}
+	public static void numData()
+	{
+		for(int b = 0; b < data.size(); b++)
+		{
+			inData.add(Integer.parseInt(data.get(b)));
+		}
+		for(int c = 0; c < inData.size(); c++)
+		{
+			if((double) inData.get(c) + 40 == 32)
+			{
+				decInData.add( (double) inData.get(c)+40);			
+			}
+			else
+			{		
+				decInData.add( (double) inData.get(c)+23);
+			}
+		}
+		datta = new int[decInData.size()];	
+	}
+	public static void roundData()
+	{
+		for(int d = 0; d < decInData.size(); d++)
+		{
+			roundDecInData.add((decInData.get(d).intValue()));
+			datta[d] = decInData.get(d).intValue();
+		}	
+	}
+	public static void dispData()
+	{
+		word = "";
+		letter = "";
+		for(int f = 0; f < roundDecInData.size(); f++)
+		{			
+			ch = Character.toChars(datta[f]);
+			chr = ch[0];
+			last.add(f, chr);		
+		}	
+		for(int g = 0; g < last.size(); g++)
+		{
+			letter = Character.toString(last.get(g));
+			word = word + letter;
+		}
+	}
+}
