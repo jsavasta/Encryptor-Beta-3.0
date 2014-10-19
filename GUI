@@ -1,0 +1,351 @@
+package encryption;
+import javax.swing.*;
+import java.awt.datatransfer.*;
+import java.io.*;
+import java.awt.Checkbox;
+import java.awt.Color;
+import java.awt.Toolkit;
+import java.awt.GridLayout;
+import java.awt.Transparency;
+import java.awt.event.*;
+import java.lang.Math.*;
+import java.util.ArrayList;
+public class GUI extends JFrame implements ActionListener, ItemListener
+{
+	JTextField input, output;
+	JRadioButton encrypt, decrypt;
+	JLabel in, out, rate;
+	JButton clear, run, copy, paste, close;
+	Checkbox check;
+	String[] j = new String[12];
+	String[] acceptNums = new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+"};
+	String einput, text, cont, inputText;
+	Encrypt enc = new Encrypt();
+	Decrypt dec = new Decrypt();
+	GridLayout grid = new GridLayout(7,3);
+	ButtonGroup type;
+	boolean canEncrypt, canDecrypt, numPass, wordPass, on, end;
+	int num;
+	char c;
+	GUI()
+	{
+		this.setVisible(true);	
+		init();
+	}
+	void init()
+	{
+		end = false;
+		on = false;
+		type = new ButtonGroup();
+		textSetUp();
+		radioButtonSetUp();
+		buttonSetUp();
+		checkBoxSetUp();
+		panelSetUp();
+		pack();
+		input.setText("");
+		passStrength();
+		JFrame gui = new JFrame();
+		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	public void textSetUp()
+	{
+		input = new JTextField(10);
+		in = new JLabel("Input:");
+		out = new JLabel("Output:");
+		rate = new JLabel("");
+		output = new JTextField(10);	
+	}
+	public void panelSetUp()
+	{
+		JPanel panel = new JPanel(grid);
+		grid.setHgap(20);
+		panel.add(in);
+		panel.add(input);
+		panel.add(check);
+		panel.add(rate);
+		panel.add(out);
+		panel.add(output);
+		panel.add(encrypt);
+		panel.add(decrypt);
+		panel.add(run);
+		panel.add(clear);
+		panel.add(copy);
+		panel.add(paste);
+		panel.add(close);
+		grid.setVgap(10);	
+		this.add(panel);
+	}
+	public void checkBoxSetUp()
+	{
+		check = new Checkbox("Check My Password:");
+		check.addItemListener(this);
+	}
+	public void radioButtonSetUp()
+	{
+		encrypt = new JRadioButton("Encrypt");
+		decrypt = new JRadioButton("Decrypt");
+		encrypt.addItemListener(this);
+		decrypt.addItemListener(this);		
+		type.add(encrypt);
+		type.add(decrypt);
+	} 
+	public void passStrength()
+	{
+		while(on && !end)
+		{
+			inputText = input.getText();
+			if(end)
+			{
+				return;
+			}
+			if(!check.getState())
+			{
+				rate.setText("");
+				on = false;
+				passStrength();
+				return;
+			}
+			if(inputText != null && inputText != "")
+			{
+				num = inputText.length();
+				if(inputText.equalsIgnoreCase("Dillon")) 
+				{
+					Color color = new Color(255,0,255);
+					rate.setForeground(color);
+					rate.setText("Growl");
+				}
+				else if(inputText.equalsIgnoreCase("Joey")||
+						inputText.equalsIgnoreCase("Nick"))
+				{
+					Color color = new Color(218,165,32);
+					rate.setForeground(color);
+					rate.setText("God Tier");
+				}
+				else if(num == 0)
+					rate.setText("");
+				else if (num > 75)
+				{
+					Color color = new Color(0,150,0);
+					rate.setForeground(color);
+					rate.setText("Extreme");
+				}
+				else if(num > 30)
+				{
+					Color color = new Color(0,100,0);
+					rate.setForeground(color);
+					rate.setText("Strong");
+				}
+				else if(num > 11)
+				{
+					rate.setForeground(Color.ORANGE);
+					rate.setText("Medium");
+				}
+				else if(num <= 10)
+				{
+					rate.setForeground(Color.RED);
+					rate.setText("Weak");
+				}
+			}
+		}
+		while(!on && !end)
+		{
+			if(end)
+			{
+				return;
+			}
+			if(check.getState())
+			{
+				on = true;
+				passStrength();
+				return;
+			}
+			System.out.print("");
+		}
+	}
+	public void buttonSetUp()
+	{
+		run = new JButton("Run");
+		clear = new JButton("Clear");
+		copy = new JButton("Copy Data");
+		paste = new JButton("Paste Data");
+		close = new JButton("Close");
+		close.addActionListener(this);
+		paste.addActionListener(this);
+		copy.addActionListener(this);
+		clear.addActionListener(this);
+		run.addActionListener(this);
+	}
+	public void itemStateChanged(ItemEvent e)
+	{
+		if(e.getSource() == encrypt)
+		{
+			canEncrypt = true;
+			canDecrypt = false;		
+		}
+		if(e.getSource() == decrypt)
+		{
+			canEncrypt = false;
+			canDecrypt = true;		
+		}
+	}
+	public void actionPerformed(ActionEvent e)
+	{
+		if(e.getSource() == close)
+		{
+			clearen();
+			cleardec();
+			allClear();
+			end = true;
+			System.exit(0);
+		}
+		if(e.getSource() == paste)
+		{
+			paste();
+		}
+		if(e.getSource() == copy)
+			copy();			
+		if (e.getSource() == run && canEncrypt == true)
+		{
+			if(input.getText().equalsIgnoreCase("Dillon"))
+			{
+				clearen();
+				cleardec();
+				output.setText("2000");
+			}
+			else	if(input.getText().equalsIgnoreCase("Skipper"))
+			{
+				clearen();
+				cleardec();
+				output.setText("All Hail!");
+			}
+			else	if(input.getText().equalsIgnoreCase("Nick") || 
+					input.getText().equalsIgnoreCase("Joey"))
+			{
+				clearen();
+				cleardec();
+				output.setText("Is The Best!");
+			}
+			else if(!input.getText().equals(""))
+			{
+				clearen();
+				einput = input.getText();
+				enc.getPass(einput);
+				enc.encPass();
+				enc.printPass();
+				text = enc.pass2;
+				output.setText(text);
+				enc.pass.clear();
+			}
+		}
+		if (e.getSource() == run && canDecrypt == true)
+		{
+			if(!input.getText().equals("") && checkacceptNums())
+			{
+				cleardec();
+				einput = input.getText();
+				dec.getData(einput);
+				dec.numData();
+				dec.roundData();
+				dec.dispData();
+				text = dec.word;
+				output.setText(text);
+			}
+			if(!input.getText().equals("") && !checkacceptNums())
+			{
+				output.setText("Numbers Only");		
+			}
+		}
+		if (e.getSource() == clear)
+		{
+			check.setState(false);
+			input.setText("");
+			clearen();
+			cleardec();	
+			allClear();
+		}
+	}
+	public void clearen()
+	{
+		output.setText("");
+		text = "";
+		einput = "";
+		enc.pass2 = "";
+		enc.password = "";
+		enc.pass.clear();		
+	}
+	public void cleardec()
+	{
+		output.setText("");
+		text = "";
+		einput = "";
+		dec.encData = "";
+		dec.data.clear();
+		dec.inData.clear();
+		dec.decInData.clear();
+		dec.roundDecInData.clear();
+		dec.decData.clear();
+		dec.last.clear();
+		dec.num = 0;
+		dec.datta = null;
+	}
+	public void allClear()
+	{
+		type.clearSelection();
+		rate.setText("");
+		canEncrypt = false;
+		canDecrypt = false;
+	}
+	public void copy() 
+	{
+		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		Transferable transferable = new StringSelection(text);
+		clipboard.setContents(transferable, null);	
+	}
+	public void paste()
+	{
+		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();		
+		Transferable contents = clipboard.getContents(null);
+		boolean canTrans = (contents != null && contents.isDataFlavorSupported(DataFlavor.stringFlavor));
+		if(canTrans)
+		{
+			try 
+			{
+				cont = (String) contents.getTransferData(DataFlavor.stringFlavor);
+			}
+			catch(UnsupportedFlavorException except)
+			{
+			}
+			catch(IOException except)
+			{
+			}
+		}
+		clearen();
+		cleardec();
+		input.setText(cont);
+	}
+	public boolean checkacceptNums()
+	{
+		numPass = false;
+		wordPass = true;
+		for(int j = 0; j < input.getText().length(); j++ )
+		{
+			for(int o = 0; o < 12; o++)
+			{
+				if(input.getText().substring(j,j+1).equals(acceptNums[o]))
+					numPass = true;					
+			}
+			if(!numPass)
+			{
+				wordPass = false;
+				numPass = false;
+			}	
+			else
+				numPass = false;
+		}
+		if(!wordPass)
+			return false;
+		else
+			return true;	
+	}
+}
