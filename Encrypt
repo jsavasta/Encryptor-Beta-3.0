@@ -1,0 +1,50 @@
+package encryption;
+import java.lang.Character;
+import javax.swing.*;
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.lang.String;
+import java.lang.Integer;
+public class Encrypt
+{
+	static String password;
+	static char[] letters;
+	static char[] passw;
+	static int num; //This is a num
+	static String num2; //This is a num 2
+	static ArrayList<String> pass = new ArrayList<String>();
+	public String pass2 = "";
+	public static void main (String[] args)
+	{
+		GUI gui = new GUI();
+	}
+	public void getPass(String passwordin)
+	{
+		password = passwordin;
+	}
+	public void encPass()
+	{
+		for(int a = 0; a < password.length(); a++)
+		{
+			if(Character.isWhitespace(password.codePointAt(a)))
+			{
+				num = (password.codePointAt(a)-40);			
+			}
+			else 
+			{
+				num = (password.codePointAt(a)-23);
+			}
+			//HI NSA
+			num2 = Integer.toString(num);
+			pass.add(a,num2.substring(0,1));
+			pass.add(a+1,num2.substring(1));
+		}
+	}
+	public void printPass()
+	{
+		for(int b = 0; b < pass.size(); b++)
+		{
+			pass2 = pass2 + pass.get(b);
+		}
+	}
+}
